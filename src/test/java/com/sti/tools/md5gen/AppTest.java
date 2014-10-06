@@ -95,6 +95,14 @@ public class AppTest
     public void testPropNotExist() {
         URL src = AppTest.class.getResource("/min.js");
         String prop = AppTest.class.getResource("/").getPath() + "var_.properties";
+        String copy = AppTest.class.getResource("/").getPath() + "min.4a08965.js";
+
+
+        File copyFile = new File(copy);
+        if (copyFile.exists()) {
+            copyFile.delete();
+        }
+
 
         File propFile = new File(prop);
         if (propFile.exists()) {
@@ -115,6 +123,7 @@ public class AppTest
             properties.load(reader);
 
             assertEquals("min.4a08965.js", properties.getProperty("min.js"));
+            assertTrue("Copy file is not created.", copyFile.exists());
         } catch (IOException e) {
             e.printStackTrace();
             assertTrue(e.getLocalizedMessage(), false);

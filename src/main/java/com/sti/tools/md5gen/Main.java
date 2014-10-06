@@ -2,6 +2,8 @@ package com.sti.tools.md5gen;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 /**
  * Created by sergeyi on 03.10.2014.
@@ -13,7 +15,7 @@ public class Main {
      *
      * @param args = srcFileName propFileName
      */
-    public static void execute(String[] args) throws IOException, IllegalArgumentException{
+    public static void execute(String[] args) throws IOException, IllegalArgumentException {
 
         if (args.length < 2)
             throw new IllegalArgumentException("srcFileName or propFileName not specified.");
@@ -37,6 +39,10 @@ public class Main {
 
         // set file mapping in properties file
         Tools.setPropertyToFile(propFile, name, newName);
+
+        // copy source to file with new name
+        File copyFile = new File(srcFile.getParent(), newName);
+        Files.copy(srcFile.toPath(), copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
 
 }
