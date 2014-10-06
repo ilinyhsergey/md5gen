@@ -6,31 +6,22 @@ import java.util.Properties;
 
 public class Tools {
 
-    static String generateMd5FromFile(File file) {
+    static String generateMd5FromFile(File file) throws IOException {
 
         if (!file.isFile()) {
-            throw new RuntimeException(file.getName() + " is not a file.");
+            throw new RuntimeException(file.getAbsolutePath() + " is not a file.");
         }
 
         String generate = null;
+        FileInputStream in = new FileInputStream(file);
 
-        try {
-            FileInputStream in = new FileInputStream(file);
-
-            int length = (int) file.length();
-            byte[] data = new byte[length];
-            if (in.read(data) != -1) {
-                generate = Md5Generator.generate(data);
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        int length = (int) file.length();
+        byte[] data = new byte[length];
+        if (in.read(data) != -1) {
+            generate = Md5Generator.generate(data);
         }
 
         return generate;
-
     }
 
     public static String insertMd5ToFilename(String name, String md5) {
@@ -58,7 +49,7 @@ public class Tools {
         return newName;
     }
 
-    public static void setPropertyToFile(File propFile, String key, String value) {
+    public static void setPropertyToFile(File propFile, String key, String value) throws IOException {
         BufferedReader reader = null;
         BufferedWriter writer = null;
 
@@ -75,16 +66,11 @@ public class Tools {
 
             writer = new BufferedWriter(new FileWriter(propFile));
             properties.store(writer, "File mapping");
-        } catch (IOException e) {
-            e.printStackTrace();
         } finally {
-            try {
-                if (reader != null)
-                    reader.close();
-                if (writer != null)
-                    writer.close();
-            } catch (IOException ignore) {
-            }
+            if (reader != null)
+                reader.close();
+            if (writer != null)
+                writer.close();
         }
 
     }

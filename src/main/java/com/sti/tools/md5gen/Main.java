@@ -1,6 +1,7 @@
 package com.sti.tools.md5gen;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by sergeyi on 03.10.2014.
@@ -12,14 +13,14 @@ public class Main {
      *
      * @param args = srcFileName propFileName
      */
-    public static void execute(String[] args) {
+    public static void execute(String[] args) throws IOException, IllegalArgumentException{
 
         if (args.length < 2)
-            return;
+            throw new IllegalArgumentException("srcFileName or propFileName not specified.");
 
         for (String arg : args) {
             if (arg == null || arg.trim().isEmpty())
-                return;
+                throw new IllegalArgumentException("Some arguments is empty.");
         }
 
         File srcFile = new File(args[0]);

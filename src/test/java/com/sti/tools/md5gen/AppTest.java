@@ -40,7 +40,13 @@ public class AppTest
         File file = new File(resource.getPath());
         assertNotNull("File " + name + " not found", file);
 
-        String md5 = Tools.generateMd5FromFile(file);
+        String md5 = null;
+        try {
+            md5 = Tools.generateMd5FromFile(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+            assertTrue(e.getLocalizedMessage(), false);
+        }
         assertEquals("8c4d5f072e57cf2eb384dee9b403ac5f", md5);
     }
 
@@ -50,9 +56,14 @@ public class AppTest
         URL src2 = AppTest.class.getResource("/file");
         URL prop = AppTest.class.getResource("/var.properties");
 
-        Main.execute(new String[]{src.getPath(), prop.getPath()});
-        Main.execute(new String[]{src1.getPath(), prop.getPath()});
-        Main.execute(new String[]{src2.getPath(), prop.getPath()});
+        try {
+            Main.execute(new String[]{src.getPath(), prop.getPath()});
+            Main.execute(new String[]{src1.getPath(), prop.getPath()});
+            Main.execute(new String[]{src2.getPath(), prop.getPath()});
+        } catch (IOException e) {
+            e.printStackTrace();
+            assertTrue(e.getLocalizedMessage(), false);
+        }
 
         BufferedReader reader = null;
         try {
@@ -65,11 +76,12 @@ public class AppTest
             assertEquals("file.1234567.txt", properties.getProperty("file3.txt"));
             assertEquals("file.1234567.txt", properties.getProperty("file4.txt"));
 
-            assertEquals("file.3348b56", properties.getProperty("file"));
-            assertEquals("min.8c4d5f0.js", properties.getProperty("min.js"));
-            assertEquals("same-content-min.8c4d5f0.js", properties.getProperty("same-content-min.js"));
+            assertEquals("file.1d08159", properties.getProperty("file"));
+            assertEquals("min.4a08965.js", properties.getProperty("min.js"));
+            assertEquals("same-content-min.4a08965.js", properties.getProperty("same-content-min.js"));
         } catch (IOException e) {
             e.printStackTrace();
+            assertTrue(e.getLocalizedMessage(), false);
         } finally {
             try {
                 if (reader != null)
@@ -89,7 +101,12 @@ public class AppTest
             propFile.delete();
         }
 
-        Main.execute(new String[]{src.getPath(), prop});
+        try {
+            Main.execute(new String[]{src.getPath(), prop});
+        } catch (IOException e) {
+            e.printStackTrace();
+            assertTrue(e.getLocalizedMessage(), false);
+        }
 
         BufferedReader reader = null;
         try {
@@ -97,9 +114,10 @@ public class AppTest
             reader = new BufferedReader(new FileReader(propFile));
             properties.load(reader);
 
-            assertEquals("min.8c4d5f0.js", properties.getProperty("min.js"));
+            assertEquals("min.4a08965.js", properties.getProperty("min.js"));
         } catch (IOException e) {
             e.printStackTrace();
+            assertTrue(e.getLocalizedMessage(), false);
         } finally {
             try {
                 if (reader != null)
